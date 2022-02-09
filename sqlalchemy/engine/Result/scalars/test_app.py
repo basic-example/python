@@ -23,3 +23,7 @@ def test_case():
 
     assert isinstance(result.scalars(), ScalarResult)
     assert len(result.scalars().all()) == 2
+    assert len(result.scalars().all()) == 0
+
+    result = session.execute(query)
+    assert isinstance(result.scalars().first(), User)
