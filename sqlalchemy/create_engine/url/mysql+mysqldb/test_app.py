@@ -20,7 +20,7 @@ def test_case():
 
     while True:
         try:
-            engine = create_engine("mysql://root:1234@localhost/test")
+            engine = create_engine("mysql+mysqldb://root:1234@localhost/test")
             Base.metadata.create_all(engine)
         except:
             print("connection failed")
