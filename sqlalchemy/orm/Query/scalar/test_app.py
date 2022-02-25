@@ -13,7 +13,7 @@ class User(Base):
 
 
 def test_case():
-    engine = create_engine("sqlite://", echo=True)
+    engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
     session = Session(engine)
     session.add(User(id=1, name="yoo", age=10))
