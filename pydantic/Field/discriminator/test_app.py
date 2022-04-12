@@ -15,22 +15,35 @@ class Basic(BaseModel):
     password: str
 
 
-class Model(BaseModel):
+class TypedModel(BaseModel):
     credential: Union[Basic, Bearer] = Field(..., discriminator="auth_type")
 
 
+class NonTypedModel(BaseModel):
+    credential: Union[Basic, Bearer]
+
+
 def test_case():
-    Model(credential={"auth_type": "bearer", "token": "abcd"})
+    TypedModel(credential={"auth_type": "bearer", "token": "abcd"})
 
     with pytest.raises(Exception) as exception:
-        Model(credential={"auth_type": "bearer"})
+        TypedModel(credential={"auth_type": "bearer"})
 
     assert exception.type == ValidationError
-    assert "credential -> Bearer -> token\n  field required" in str(exception.value)
+    assert "token\n  field required" in str(exception.value)
+    assert "username\n  field required" not in str(exception.value)
+    assert "password\n  field required" not in str(exception.value)
 
     with pytest.raises(Exception) as exception:
-        Model(credential={"auth_type": "basic", "bearer": "abcd"})
+        TypedModel(credential={"auth_type": "basic"})
 
     assert exception.type == ValidationError
-    assert "credential -> Basic -> username\n  field required" in str(exception.value)
-    assert "credential -> Basic -> password\n  field required" in str(exception.value)
+    assert "token\n  field required" not in str(exception.value)
+    assert "username\n  field required" in str(exception.value)
+    assert "password\n  field required" in str(exception.value)
+
+    with pytest.raises(Exception) as exception:
+        NonTypedModel(credential={"auth_type": "basic"})
+    assert "token\n  field required" in str(exception.value)
+    assert "username\n  field required" in str(exception.value)
+    assert "password\n  field required" in str(exception.value)
