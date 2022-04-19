@@ -12,7 +12,7 @@ class Keyword(Base):
     id = Column(Integer, primary_key=True)
     type_of = Column(String(50))
 
-    __mapper_args__ = {"polymorphic_identity": "keyword", "polymorphic_on": type_of}
+    __mapper_args__ = {"polymorphic_on": type_of}
 
 
 class Nationality(Keyword):
@@ -58,11 +58,27 @@ def test_case():
     logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
     logging.getLogger("sqlalchemy.engine").addHandler(StreamHandler())
 
-    (
+    result = Query(Keyword).with_session(session).all()
+
+    assert len(result) == 3
+    assert isinstance(result[0], Religion)
+    assert isinstance(result[1], Nationality)
+    assert isinstance(result[2], Nationality)
+
+    assert result[0].type
+    assert result[1].code
+    assert result[2].code
+    assert len(messages) == 4
+
+    messages = []
+    result = (
         Query(Keyword)
         .with_session(session)
         .options(selectin_polymorphic(Keyword, [Nationality, Religion]))
         .all()
     )
 
+    assert result[0].type
+    assert result[1].code
+    assert result[2].code
     assert len(messages) == 3
