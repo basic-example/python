@@ -6,8 +6,9 @@ Base = registry().generate_base()
 
 class Post_Tag(Base):
     __tablename__ = "post_tag"
-    post_id = Column(ForeignKey("posts.id"), primary_key=True)
-    tag_id = Column(ForeignKey("tags.id"), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    post_id = Column(ForeignKey("posts.id"))
+    tag_id = Column(ForeignKey("tags.id"))
 
 
 class Post(Base):
