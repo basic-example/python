@@ -8,4 +8,5 @@ def test_case():
     pdf.cell(30, 10, txt="30x10", border=1)
     pdf.cell(15, 5, txt="15x5", border=1)
     pdf.cell(30, 15, txt="30x15", border=1)
+    pdf.cell(10, 10, txt="10x10, 10x10, 10x10", border=1)
     pdf.output("result.pdf")
