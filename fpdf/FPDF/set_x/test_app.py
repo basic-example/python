@@ -5,6 +5,7 @@ def test_case():
     pdf = FPDF()
     pdf.set_font("Helvetica")
     pdf.add_page()
+    pdf.cell(10, 10, txt="10x10", border=1)
     pdf.set_x(50)
     pdf.cell(30, 10, txt="30x10", border=1)
     pdf.set_x(75)
